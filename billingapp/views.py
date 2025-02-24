@@ -48,7 +48,7 @@ def product_details(request):
                 cost_after_tax = cost_before_tax + tax_price
                 total_price_after_tax += cost_after_tax
                 if bill_id:
-                    Purchased.objects.create(billing_id = bill_id, product_id = i[0] , quantity = i[1]   )  
+                    Purchased.objects.select_related("billing").create(billing_id = bill_id, product_id = i[0] , quantity = i[1]   )  
 
             customer_payable = 0
             vendor_payable = 0
@@ -57,7 +57,7 @@ def product_details(request):
             else:
                 vendor_payable = int(amount) - total_price_after_tax
             if bill_id:
-                Denomination.objects.get_or_create(billing_id=bill_id, amount_500= count_500,amount_50 = count_50, amount_20=count_20 ,
+                Denomination.objects.select_related('billing').get_or_create(billing_id=bill_id, amount_500= count_500,amount_50 = count_50, amount_20=count_20 ,
                                             amount_10= count_10, amount_5= count_5, amount_2= count_2, amount_1= count_1,
                                             total_price_without_tax = total_price_without_tax, total_price_after_tax = total_price_after_tax,
             total_tax_payable = total_tax_payable,customer_paid = amount, balance_to_be_paid_to_customer = vendor_payable,
@@ -81,7 +81,7 @@ def get_product_details(request):
     try:
         email = request.GET.get('email', None)
 
-        z = Purchased.objects.filter(billing__email = email).values('billing__email','product__product_id', 'product__product_name', 
+        z = Purchased.objects.select_related('billing', 'product').filter(billing__email = email).values('billing__email','product__product_id', 'product__product_name', 
                                                                     'product__price_per_unit','product__tax_percentage', 'quantity')
         aggregated_data = defaultdict(lambda: {'product_name': '', 'price_per_unit': Decimal('0.00'), 'tax_percentage': Decimal('0.00'), 'total_quantity': 0})
         email = ""
@@ -98,7 +98,6 @@ def get_product_details(request):
             aggregated_data[product_id]['total_tax_amount'] = aggregated_data[product_id]['total_unit_price'] * (aggregated_data[product_id]['tax_percentage'] / 100)
             aggregated_data[product_id]['total_amount'] = aggregated_data[product_id]['total_unit_price'] + aggregated_data[product_id]['total_tax_amount']
     
-        # Convert to a list for display
         result = [{'product_id': k, **v} for k, v in aggregated_data.items()] 
         
         context = {'my_data': result}    
@@ -115,7 +114,7 @@ def get_product_details(request):
             cost_after_tax = cost_before_tax + tax_price
             total_price_after_tax += cost_after_tax
                 
-        s = Denomination.objects.filter(billing__email = email ).values()
+        s = Denomination.objects.select_related('billing').filter(billing__email = email ).values()
         customer_paid = 0
         for i in s:
             customer_paid += i['customer_paid']
