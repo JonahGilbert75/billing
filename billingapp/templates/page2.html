@@ -1,0 +1,122 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+
+<script>
+    var i = 0;
+    function addrow()
+    {
+        i++;
+        document.getElementById('myTable').insertAdjacentHTML(
+            'beforeend', 
+                  
+        '</td><td> <input type="text"  name="product_id" placeholder="Enter Product id">'
+        +               
+        '</td><td> <input type="text"  name="quantity" placeholder="Enter Quantity">'
+        );
+    }
+    </script>
+
+
+<form action="" method="POST">
+    {% csrf_token %} 
+
+<table>
+    <tr>
+        <th>Customer Email </th>
+        
+    </tr>
+    <tr>
+        <td>
+            {{ email }}
+             
+          </td>
+          
+    </tr>
+    
+</table>
+
+
+
+
+<hr>
+
+<h1>Billing Section </h1>
+<table>
+    
+    <tr>
+        <th>Product id </th>
+        <th>Unit Price </th>
+        <th>Quantity </th>
+        <th>Purchase Price</th>
+        <th>Tax % of item </th>
+        <th>Tax Payable for Item </th>
+        <th>Total Price of item </th>
+
+        
+    </tr>
+
+
+   
+    {% for value in my_data %}
+        {% comment %} {% for value in item %} {% endcomment %}
+                {% comment %} <li>{{ item.product.product_id }}, {{ item.product }}, {{ item.billing.id }}, {{ item.billing }}, {{ item.billing.email }}, {{ item.quantity }}</li> {% endcomment %}
+            
+                <tr>
+                    {% comment %} <td>{{ key }} </td> {% endcomment %}
+                        <td>{{ value.product_id }} </td>
+                            <td>{{ value.price_per_unit }} </td>
+                                <td>{{ value.total_quantity }}</td>
+                                    <td>{{ value.total_unit_price }} </td>
+                                        <td>{{ value.tax_percentage }} </td>
+                                            <td>{{ value.total_tax_amount }} </td>
+                                            <td>{{ value.total_amount }} </td>
+
+        
+    </tr>
+    {% endfor %}
+    {% comment %} {% endfor %} {% endcomment %}
+    
+
+
+
+</table>
+<br><br>
+<table>
+    <tr>
+        <h4>Total Price Without Tax : {{final_value.total_price_without_tax}} </h4>
+        <h4>Total Tax Payable : {{final_value.total_tax_payable}} </h4>
+            <h4>Net price of purchased item : {{final_value.total_price_after_tax}} </h4>
+                <h4>Round down value of purchased items net price : {{final_value.round_off}} </h4>
+                    <h4>Balance Payable to customer : {{final_value.to_be_paid_to_customer}} </h4>
+
+        
+    </tr>
+    
+
+    
+</table>
+
+<br>
+
+
+<hr>
+<br>
+
+
+</form>
+
+<h1>Balance Denomination </h1>
+<table border="1" align="right">
+    <h4>{{ 500 }} : {{ denominations.500_count }}</h4>
+            <h4>{{ 50 }} :  {{ denominations.50_count }}</h4>
+            <h4>{{ 20 }} :  {{ denominations.20_count }}</h4>
+            <h4>{{ 10 }} :  {{ denominations.10_count }}</h4>
+            <h4>{{ 5 }} :   {{ denominations.5_count }}</h4>
+            <h4>{{ 2 }} :   {{ denominations.2_count }}</h4>
+            <h4>{{ 1 }} :   {{ denominations.1_count }}</h4>
+</table>
+
+
+{% endblock %}

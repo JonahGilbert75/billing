@@ -1,0 +1,191 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+
+<script>
+    var i = 0;
+    function addrow()
+    {
+        i++;
+        document.getElementById('myTable').insertAdjacentHTML(
+            'beforeend', 
+                  
+        '</td><td> <input type="text"  name="product_id" placeholder="Enter Product id">'
+        +               
+        '</td><td> <input type="text"  name="quantity" placeholder="Enter Quantity">'
+        );
+    }
+    </script>
+
+
+
+<form method="POST" action="{% url 'billingapp:get_product_details' %}" id="form" >
+    {% csrf_token %} 
+
+<table>
+    <tr>
+        <th>Customer Email :</th>
+        
+    </tr>
+    <tr>
+        <td>
+              <input type="text"  name="CustomerEmail" id="customer_email"
+                   placeholder="Enter Customer Email">
+          </td>
+          
+    </tr>
+    
+</table>
+
+
+
+<h1>Billing Section </h1>
+
+<table id="myTable">
+   
+    <tr>
+        <th>Product id </th>
+        <th>Quantity</th>
+    </tr>
+    <tr>
+       
+    </tr>
+
+    
+</table>
+<br/>
+<button type= 'button' onclick="addrow()">Add Row</button>
+<hr>
+
+<h1>Denomination </h1>
+<table>
+    
+    <tr>
+        <th>500 </th>
+        <td>
+            <input type="number" id='500_count' name='500_count' 
+                 placeholder="Enter 500's">
+        </td>
+    </tr>
+
+    <tr>
+        <th>50 </th>
+        <td>
+            <input type="number" id='50_count' name='50_count'
+                 placeholder="Enter 50's">
+        </td>
+    </tr>
+
+    <tr>
+        <th>20 </th>
+        <td>
+            <input type="number" id='20_count' name='20_count'
+                 placeholder="Enter 20's">
+        </td>
+    </tr>
+
+    <tr>
+        <th>10 </th>
+        <td>
+            <input type="number" id='10_count'name='10_count'
+                 placeholder="Enter 10's">
+        </td>
+    </tr>
+
+    <tr>
+        <th>5 </th>
+        <td>
+            <input type="number" id='5_count' name='5_count'
+                 placeholder="Enter 5's">
+        </td>
+    </tr>
+
+    <tr>
+        <th>2 </th>
+        <td>
+            <input type="number" id='2_count' name='2_count'
+                 placeholder="Enter 2's">
+        </td>
+    </tr>
+
+    <tr>
+        <th>1 </th>
+        <td>
+            <input type="number" id='1_count' name='1_count'
+                 placeholder="Enter 1's">
+        </td>
+    </tr>
+
+
+</table>
+
+<table>
+    <tr>
+        <th>Cash Paid by Customer </th>
+        
+    </tr>
+    <tr>
+        <td>
+                   <h2 class="result" name='amount' ><span id="total">0</span></h2>
+          </td>
+          
+          
+    </tr>
+
+
+    <script>
+        function updateTotal() {
+            let num1 = parseFloat(document.getElementById("500_count").value) || 0;
+            let num2 = parseFloat(document.getElementById("50_count").value) || 0;
+            let num3 = parseFloat(document.getElementById("20_count").value) || 0;
+            let num4 = parseFloat(document.getElementById("10_count").value) || 0;
+            let num5 = parseFloat(document.getElementById("5_count").value) || 0;
+            let num6 = parseFloat(document.getElementById("2_count").value) || 0;
+            let num7 = parseFloat(document.getElementById("1_count").value) || 0;
+            document.getElementById("total").textContent = (num1*500) + (num2*50)+ (num3*20) + (num4*10) + (num5*5) + (num6*2) + (num7*1);
+        }
+
+        document.getElementById("500_count").addEventListener("input", updateTotal);
+        document.getElementById("50_count").addEventListener("input", updateTotal);
+        document.getElementById("20_count").addEventListener("input", updateTotal);
+        document.getElementById("10_count").addEventListener("input", updateTotal);
+        document.getElementById("5_count").addEventListener("input", updateTotal);
+        document.getElementById("2_count").addEventListener("input", updateTotal);
+        document.getElementById("1_count").addEventListener("input", updateTotal);
+        
+    </script>
+
+
+
+    
+</table>
+
+<table>
+
+
+    <tr>
+        <td><button type= 'reset' value="Clear All" >Cancel</button> </td>
+        
+    
+        <td>
+            
+            <input type="submit" formaction= '' name = 'action' value="Generate Bill">
+
+        
+          </td>
+          
+    </tr>
+
+
+</table>
+
+
+</form>
+
+
+
+
+
+
+{% endblock %}
